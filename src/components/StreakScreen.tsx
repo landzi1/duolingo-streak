@@ -66,14 +66,14 @@ export const HeroFlameIcon = ({ active }: { active: boolean }) => (
 
 export const StreakScreen = ({
   onClose,
-  initialMonth = dayjs("2026-01-01"),
+  initialMonth,
 }: {
   onClose?: () => void;
   initialMonth?: dayjs.Dayjs;
 }) => {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<"PERSONAL" | "FRIENDS">("PERSONAL");
-  const [now, setNow] = useState(initialMonth);
+  const [now, setNow] = useState(initialMonth ?? dayjs());
 
   const streak = useBoundStore((x) => x.streak);
   const customStreak = useBoundStore((x) => x.customStreak);

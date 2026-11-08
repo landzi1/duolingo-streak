@@ -319,78 +319,6 @@ export const DuoWithPotionSvg = () => (
   </div>
 );
 
-// Duo Peeking with Blue Gaming Headphones above witch
-export const DuoHeadphonesPeeking = () => (
-  <div className="relative -mb-4 flex justify-center">
-    <svg width="76" height="48" viewBox="0 0 76 48" fill="none" className="overflow-visible">
-      <ellipse cx="38" cy="42" rx="30" ry="32" fill="#58cc02" />
-      <path d="M14 30C14 16 24 9 38 9C52 9 62 16 62 30" stroke="#3b82f6" strokeWidth="6" fill="none" strokeLinecap="round" />
-      <rect x="8" y="26" width="10" height="16" rx="5" fill="#60a5fa" stroke="#2563eb" strokeWidth="1.5" />
-      <rect x="58" y="26" width="10" height="16" rx="5" fill="#60a5fa" stroke="#2563eb" strokeWidth="1.5" />
-      <path d="M28 34C31 31 35 31 38 34" stroke="#46a302" strokeWidth="3" strokeLinecap="round" fill="none" />
-      <path d="M35 40L38 44L41 40H35Z" fill="#ff9600" />
-    </svg>
-  </div>
-);
-
-// Witch Event Badge matching IMG_6309.PNG 1:1
-export const WitchEventBadge = () => (
-  <div className="flex flex-col items-center">
-    <DuoHeadphonesPeeking />
-    <div className="relative flex h-16 w-16 items-center justify-center rounded-2xl bg-[#362569] shadow-md">
-      <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
-        <circle cx="22" cy="26" r="11" fill="#fed7aa" />
-        <circle cx="19" cy="26" r="1.5" fill="#3c3c3c" />
-        <circle cx="25" cy="26" r="1.5" fill="#3c3c3c" />
-        <path
-          d="M11 26C11 33 15 37 22 37C29 37 33 33 33 26"
-          stroke="#a855f7"
-          strokeWidth="3.5"
-          fill="none"
-        />
-        <path d="M22 4L32 20H12L22 4Z" fill="#241447" />
-        <ellipse cx="22" cy="20" rx="16" ry="4.5" fill="#241447" />
-        <circle cx="22" cy="19" r="2.5" fill="white" />
-      </svg>
-    </div>
-    <div className="-mt-2.5 z-10 rounded-lg bg-[#2d3574] px-2.5 py-0.5 text-[11px] font-black uppercase text-white shadow">
-      16 days
-    </div>
-  </div>
-);
-
-// Claim Purple Chest Badge matching IMG_6309.PNG 1:1
-export const ClaimChestBadge = () => (
-  <div className="relative flex items-center">
-    <div className="flex flex-col items-center">
-      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#9b62f7] shadow-md">
-        <svg width="38" height="38" viewBox="0 0 34 34" fill="none">
-          <rect x="6" y="14" width="22" height="13" rx="2" fill="#ffc800" />
-          <path d="M6 14C6 11 9 9 17 9C25 9 28 11 28 14H6Z" fill="#ffc800" />
-          <rect x="9" y="9" width="3" height="18" fill="#e5a500" />
-          <rect x="22" y="9" width="3" height="18" fill="#e5a500" />
-          <circle cx="17" cy="16" r="3" fill="white" />
-        </svg>
-      </div>
-      <div className="-mt-2.5 z-10 rounded-lg bg-[#6e3be0] px-3 py-0.5 text-[11px] font-black uppercase text-white shadow">
-        Claim
-      </div>
-    </div>
-    {/* Three faint grey stars floating to the right */}
-    <div className="absolute left-[70px] -top-1 flex items-center gap-1 opacity-35">
-      <svg width="17" height="17" viewBox="0 0 24 24" fill="#9ca3af" className="rotate-[-10deg]">
-        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
-      </svg>
-      <svg width="17" height="17" viewBox="0 0 24 24" fill="#9ca3af" className="translate-y-1">
-        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
-      </svg>
-      <svg width="17" height="17" viewBox="0 0 24 24" fill="#9ca3af" className="rotate-[10deg]">
-        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
-      </svg>
-    </div>
-  </div>
-);
-
 // Wooden chest matching IMG_6309.PNG 1:1
 export const Unit7WoodenChestSvg = () => (
   <div className="relative flex items-center justify-center">
@@ -570,20 +498,11 @@ const UnitSection = ({ unit }: { unit: Unit }): JSX.Element => {
       />
 
       <div className="relative mb-8 mt-2 flex max-w-2xl flex-col items-center gap-5">
-        {/* Floating Badges & Mascot for Unit 7 (matching IMG_6309.PNG) */}
+        {/* Duo Mascot for Unit 7 (matching IMG_6309.PNG) */}
         {unit.unitNumber === 7 && (
-          <>
-            {/* Left side event badges */}
-            <div className="absolute left-1 top-2 z-20 flex flex-col gap-6 sm:left-4">
-              <WitchEventBadge />
-              <ClaimChestBadge />
-            </div>
-
-            {/* Duo Mascot holding purple potion flask next to Node 4 (Star) */}
-            <div className="pointer-events-none absolute right-3 top-[310px] z-20">
-              <DuoWithPotionSvg />
-            </div>
-          </>
+          <div className="pointer-events-none absolute right-3 top-[310px] z-20">
+            <DuoWithPotionSvg />
+          </div>
         )}
 
         {unit.tiles.map((tile, i): JSX.Element => {

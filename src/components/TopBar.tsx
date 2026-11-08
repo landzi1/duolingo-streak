@@ -110,7 +110,7 @@ export const TopBar = ({
             <span
               className={[
                 "text-xl font-extrabold",
-                streak > 0 ? "text-[#ff9600]" : "text-[#4b4b4b]",
+                streak > 0 ? "text-[#ff9600]" : "text-[#a0a0a0]",
               ].join(" ")}
             >
               {streak}
