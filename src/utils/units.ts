@@ -1,5 +1,7 @@
 export type Unit = {
   unitNumber: number;
+  sectionNumber?: number;
+  title?: string;
   description: string;
   backgroundColor: `bg-${string}`;
   textColor: `text-${string}`;
@@ -9,7 +11,14 @@ export type Unit = {
 
 export type Tile =
   | {
-      type: "star" | "dumbbell" | "book" | "trophy" | "fast-forward";
+      type:
+        | "star"
+        | "dumbbell"
+        | "book"
+        | "trophy"
+        | "fast-forward"
+        | "video"
+        | "headphones";
       description: string;
     }
   | { type: "treasure" };
@@ -18,27 +27,39 @@ export type TileType = Tile["type"];
 
 export const units: readonly Unit[] = [
   {
-    unitNumber: 1,
-    description: "Form basic sentences, greet people",
+    unitNumber: 7,
+    sectionNumber: 1,
+    title: "Use the present tense",
+    description: "SECTION 1, UNIT 7",
     backgroundColor: "bg-[#58cc02]",
     textColor: "text-[#58cc02]",
     borderColor: "border-[#46a302]",
     tiles: [
       {
-        type: "star",
-        description: "Form basic sentences",
+        type: "dumbbell",
+        description: "Personalized practice",
+      },
+      {
+        type: "video",
+        description: "Watch and learn",
       },
       {
         type: "book",
         description: "Good morning",
       },
       {
+        type: "headphones",
+        description: "Listening practice",
+      },
+      {
         type: "star",
-        description: "Greet people",
+        description: "Use the present tense",
       },
       { type: "treasure" },
-      { type: "book", description: "A date" },
-      { type: "trophy", description: "Unit 1 review" },
+      {
+        type: "video",
+        description: "Unit 7 review",
+      },
     ],
   },
   {

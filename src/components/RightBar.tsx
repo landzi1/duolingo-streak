@@ -110,6 +110,12 @@ export const RightBar = () => {
                 {`But your streak will reset tomorrow if you don't practice tomorrow. Watch out!`}
               </p>
               <Calendar now={now} setNow={setNow} />
+              <Link
+                href="/streak"
+                className="w-full rounded-2xl border-b-4 border-orange-500 bg-[#ff9600] py-2.5 text-center text-sm font-extrabold uppercase text-white transition hover:brightness-105 active:border-b-2 shadow-sm"
+              >
+                View Full Streak View 🔥
+              </Link>
             </div>
           </span>
           <span

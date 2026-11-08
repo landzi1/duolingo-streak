@@ -5,7 +5,7 @@ import type { Tab } from "./BottomBar";
 import { useBottomBarItems } from "./BottomBar";
 import type { LoginScreenState } from "./LoginScreen";
 import { LoginScreen } from "./LoginScreen";
-import { GlobeIconSvg, PodcastIconSvg } from "./Svgs";
+import { GlobeIconSvg, PodcastIconSvg, FireSvg } from "./Svgs";
 import { useBoundStore } from "~/hooks/useBoundStore";
 
 const LeftBarMoreMenuSvg = (props: ComponentProps<"svg">) => {
@@ -69,6 +69,17 @@ export const LeftBar = ({ selectedTab }: { selectedTab: Tab | null }) => {
               </li>
             );
           })}
+          <li className="flex flex-1">
+            <Link
+              href="/streak"
+              className="flex grow items-center gap-3 rounded-xl px-2 py-1 text-sm font-bold uppercase text-orange-500 hover:bg-orange-50 transition"
+            >
+              <div className="flex h-[34px] w-[34px] items-center justify-center">
+                <FireSvg />
+              </div>
+              <span className="sr-only lg:not-sr-only">Streak</span>
+            </Link>
+          </li>
           <div
             className="relative flex grow cursor-default items-center gap-3 rounded-xl px-2 py-1 font-bold uppercase text-gray-400 hover:bg-gray-100"
             onClick={() => setMoreMenuShown((x) => !x)}
