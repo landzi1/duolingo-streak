@@ -40,3 +40,7 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+# screenshots
+IMG_*.PNG
+IMG_*.png
