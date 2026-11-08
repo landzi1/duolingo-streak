@@ -64,6 +64,31 @@ export const isActiveDay = (
   return activeDays.has(toDateString(day));
 };
 
+export const getMonthStreakFromSets = (
+  monthDate: dayjs.Dayjs,
+  practicedDays: Set<DateString>,
+  freezeDays: Set<DateString>,
+): number => {
+  const allActive = new Set<DateString>([...practicedDays, ...freezeDays]);
+  let maxStreak = 0;
+  let currentStreak = 0;
+  const daysInMonth = monthDate.daysInMonth();
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dateStr = toDateString(monthDate.date(d));
+    if (allActive.has(dateStr)) {
+      currentStreak++;
+      if (currentStreak > maxStreak) {
+        maxStreak = currentStreak;
+      }
+    } else {
+      currentStreak = 0;
+    }
+  }
+
+  return maxStreak;
+};
+
 export const calculateStreak = (
   practicedDays: Set<DateString>,
   freezeDays: Set<DateString>,
@@ -209,6 +234,7 @@ export type StreakSlice = {
   seedScreenshotPreset: () => void;
   getDaysPracticedInMonth: (monthDate: dayjs.Dayjs) => number;
   getFreezesUsedInMonth: (monthDate: dayjs.Dayjs) => number;
+  getMonthStreak: (monthDate: dayjs.Dayjs) => number;
   setCustomStreak: (streak: number | null) => void;
   initFromStorage: () => void;
   saveToStorage: () => void;
@@ -252,13 +278,18 @@ export const createStreakSlice: BoundStateCreator<StreakSlice> = (
     }
 
     const active = new Set([...practiced, ...freeze]);
-    const customStreak = get().customStreak;
+    let customStreak = get().customStreak;
+    // Clear locked 0 preset on user interaction so streak calculates dynamically
+    if (customStreak === 0) {
+      customStreak = null;
+    }
     const streak = calculateStreak(practiced, freeze, customStreak);
 
     set({
       practicedDays: practiced,
       freezeDays: freeze,
       activeDays: active,
+      customStreak,
       streak,
     });
     saveStoredStreak(practiced, freeze, customStreak);
@@ -281,13 +312,18 @@ export const createStreakSlice: BoundStateCreator<StreakSlice> = (
     }
 
     const active = new Set([...practiced, ...freeze]);
-    const customStreak = get().customStreak;
+    let customStreak = get().customStreak;
+    // Clear locked 0 preset on user interaction so streak calculates dynamically
+    if (customStreak === 0) {
+      customStreak = null;
+    }
     const streak = calculateStreak(practiced, freeze, customStreak);
 
     set({
       practicedDays: practiced,
       freezeDays: freeze,
       activeDays: active,
+      customStreak,
       streak,
     });
     saveStoredStreak(practiced, freeze, customStreak);
@@ -301,13 +337,18 @@ export const createStreakSlice: BoundStateCreator<StreakSlice> = (
     practiced.add(today);
 
     const active = new Set([...practiced, ...freeze]);
-    const customStreak = get().customStreak;
+    let customStreak = get().customStreak;
+    // Clear locked 0 preset on user interaction so streak calculates dynamically
+    if (customStreak === 0) {
+      customStreak = null;
+    }
     const streak = calculateStreak(practiced, freeze, customStreak);
 
     set({
       practicedDays: practiced,
       freezeDays: freeze,
       activeDays: active,
+      customStreak,
       streak,
     });
     saveStoredStreak(practiced, freeze, customStreak);
@@ -321,13 +362,18 @@ export const createStreakSlice: BoundStateCreator<StreakSlice> = (
     freeze.add(today);
 
     const active = new Set([...practiced, ...freeze]);
-    const customStreak = get().customStreak;
+    let customStreak = get().customStreak;
+    // Clear locked 0 preset on user interaction so streak calculates dynamically
+    if (customStreak === 0) {
+      customStreak = null;
+    }
     const streak = calculateStreak(practiced, freeze, customStreak);
 
     set({
       practicedDays: practiced,
       freezeDays: freeze,
       activeDays: active,
+      customStreak,
       streak,
     });
     saveStoredStreak(practiced, freeze, customStreak);
@@ -362,13 +408,18 @@ export const createStreakSlice: BoundStateCreator<StreakSlice> = (
     }
 
     const active = new Set([...practiced, ...freeze]);
-    const customStreak = get().customStreak;
+    let customStreak = get().customStreak;
+    // Clear locked 0 preset on user interaction so streak calculates dynamically
+    if (customStreak === 0) {
+      customStreak = null;
+    }
     const streak = calculateStreak(practiced, freeze, customStreak);
 
     set({
       practicedDays: practiced,
       freezeDays: freeze,
       activeDays: active,
+      customStreak,
       streak,
     });
     saveStoredStreak(practiced, freeze, customStreak);
@@ -387,13 +438,18 @@ export const createStreakSlice: BoundStateCreator<StreakSlice> = (
     }
 
     const active = new Set([...practiced, ...freeze]);
-    const customStreak = get().customStreak;
+    let customStreak = get().customStreak;
+    // Clear locked 0 preset on user interaction so streak calculates dynamically
+    if (customStreak === 0) {
+      customStreak = null;
+    }
     const streak = calculateStreak(practiced, freeze, customStreak);
 
     set({
       practicedDays: practiced,
       freezeDays: freeze,
       activeDays: active,
+      customStreak,
       streak,
     });
     saveStoredStreak(practiced, freeze, customStreak);
@@ -421,13 +477,18 @@ export const createStreakSlice: BoundStateCreator<StreakSlice> = (
     }
 
     const active = new Set([...practiced, ...freeze]);
-    const customStreak = get().customStreak;
+    let customStreak = get().customStreak;
+    // Clear locked 0 preset on user interaction so streak calculates dynamically
+    if (customStreak === 0) {
+      customStreak = null;
+    }
     const streak = calculateStreak(practiced, freeze, customStreak);
 
     set({
       practicedDays: practiced,
       freezeDays: freeze,
       activeDays: active,
+      customStreak,
       streak,
     });
     saveStoredStreak(practiced, freeze, customStreak);
@@ -437,13 +498,18 @@ export const createStreakSlice: BoundStateCreator<StreakSlice> = (
     const practiced = new Set<DateString>();
     const freeze = new Set<DateString>();
     const active = new Set<DateString>();
-    const customStreak = get().customStreak;
+    let customStreak = get().customStreak;
+    // Clear locked 0 preset on user interaction so streak calculates dynamically
+    if (customStreak === 0) {
+      customStreak = null;
+    }
     const streak = calculateStreak(practiced, freeze, customStreak);
 
     set({
       practicedDays: practiced,
       freezeDays: freeze,
       activeDays: active,
+      customStreak,
       streak,
     });
     saveStoredStreak(practiced, freeze, customStreak);
@@ -490,6 +556,14 @@ export const createStreakSlice: BoundStateCreator<StreakSlice> = (
       }
     });
     return count;
+  },
+
+  getMonthStreak: (monthDate) => {
+    return getMonthStreakFromSets(
+      monthDate,
+      get().practicedDays,
+      get().freezeDays,
+    );
   },
 
   setCustomStreak: (customStreak) => {

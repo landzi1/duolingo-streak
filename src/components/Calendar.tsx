@@ -40,42 +40,71 @@ export const SparkleSvg = ({ className }: { className?: string }) => (
   </svg>
 );
 
-// Freeze droplet speech-bubble badge as seen on day 10 & 25 in IMG_6308.PNG
-export const FreezeDropletBadge = ({
+// Freeze Ice Badge 1:1 copy from IMG_6308.PNG (day 10, day 25 & Freezes card)
+export const FreezeIceBadge = ({
   dayNumber,
-  size = 36,
+  size = 40,
   className,
 }: {
-  dayNumber: number;
+  dayNumber?: number;
   size?: number;
   className?: string;
 }) => {
+  const height = size * 1.06;
   return (
     <div
       className={`relative flex items-center justify-center select-none ${className ?? ""}`}
-      style={{ width: size, height: size }}
+      style={{ width: size, height }}
     >
       <svg
-        viewBox="0 0 38 42"
+        viewBox="0 0 100 106"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="absolute inset-0 h-full w-full drop-shadow-sm"
+        className="h-full w-full drop-shadow-sm"
       >
-        {/* Main circular droplet body with tail on bottom left */}
+        {/* Outer Ice Body with two dripping icicle tails */}
         <path
-          d="M19 1C28.9411 1 37 9.05887 37 19C37 28.9411 28.9411 37 19 37C16.4853 37 14.1039 36.4839 11.9442 35.5562L5 41L7.54512 32.7486C3.51869 29.3514 1 24.4716 1 19C1 9.05887 9.05887 1 19 1Z"
-          fill="#20b7f8"
+          d="M50 4C74.85 4 95 24.15 95 49C95 62.5 89 74.5 79.5 83L83.5 91C84.2 92.5 82.8 94 81.2 93.2L74.5 89.8C67.5 93.6 59 95 50 95C46.5 95 43 94.6 39.8 93.8L32.2 103.5C30.8 105.2 28.2 104.5 27.8 102.2L26 90.5C14.5 81.5 6 66.5 6 49C6 24.15 25.7 4 50 4Z"
+          fill="#5dc5f8"
         />
-        {/* Subtle inner highlight */}
-        <path
-          d="M19 3C27.8366 3 35 10.1634 35 19C35 21.5 34.4 23.8 33.3 25.8C31.5 14.5 22 5.5 10.2 4.1C12.9 3.4 15.8 3 19 3Z"
-          fill="white"
-          fillOpacity="0.22"
-        />
+        {/* Inner Circle with two-tone diagonal gloss */}
+        <g clipPath="url(#freeze_inner_circle_clip)">
+          <circle cx="50" cy="49" r="36" fill="#1cb0f6" />
+          {/* Diagonal highlight (top-left lighter blue) */}
+          <path
+            d="M14 49C14 29 30 13 50 13C60 13 69 17 76 23.5L24 75C17.8 68 14 59 14 49Z"
+            fill="#52bcf8"
+          />
+          {/* Specular highlight rim on top-left */}
+          <path
+            d="M26 26C33 19 41 16 50 16"
+            stroke="white"
+            strokeWidth="4.5"
+            strokeLinecap="round"
+            opacity="0.45"
+          />
+        </g>
+        <defs>
+          <clipPath id="freeze_inner_circle_clip">
+            <circle cx="50" cy="49" r="36" />
+          </clipPath>
+        </defs>
+        {/* Date number if provided */}
+        {dayNumber !== undefined && (
+          <text
+            x="50"
+            y="49"
+            dominantBaseline="central"
+            textAnchor="middle"
+            fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+            fontWeight="900"
+            fontSize="32"
+            fill="white"
+          >
+            {dayNumber}
+          </text>
+        )}
       </svg>
-      <span className="relative z-10 text-sm font-extrabold text-white">
-        {dayNumber}
-      </span>
     </div>
   );
 };
@@ -139,7 +168,7 @@ export const Calendar = ({
           <div className="flex items-center gap-4">
             <button
               type="button"
-              className="p-1 text-gray-400 transition hover:text-gray-600 active:scale-95"
+              className="p-1 text-gray-400 transition hover:text-gray-600 active:scale-90"
               onClick={() => setNow((prev) => prev.add(-1, "month"))}
               aria-label="Previous month"
             >
@@ -147,7 +176,7 @@ export const Calendar = ({
             </button>
             <button
               type="button"
-              className="p-1 text-gray-400 transition hover:text-gray-600 active:scale-95"
+              className="p-1 text-gray-400 transition hover:text-gray-600 active:scale-90"
               onClick={() => setNow((prev) => prev.add(1, "month"))}
               aria-label="Next month"
             >
@@ -210,13 +239,10 @@ export const Calendar = ({
                 const isFullWeek = span.count === 7;
                 const isMultiDay = span.count > 1;
 
-                // Left & right percentage positions
                 const leftPercent = (span.start / 7) * 100;
                 const widthPercent = ((span.end - span.start + 1) / 7) * 100;
 
                 // Style matching IMG_6308.PNG
-                // Row 11-17 & 18-24: Full gradient pill with yellow border
-                // Row 26-31: Warm yellow/amber pill
                 const isSoftPill =
                   !isFullWeek && span.start > 0 && span.end === 6;
 
@@ -230,15 +256,12 @@ export const Calendar = ({
                     }}
                   >
                     {isSoftPill ? (
-                      // Soft amber pill for end of month (e.g., days 26-31)
                       <div className="h-full w-full rounded-full bg-[#fff0b3]" />
                     ) : isMultiDay ? (
-                      // Vibrant orange-to-red gradient pill with gold border
                       <div className="relative h-full w-full rounded-full p-[2px] bg-[#ffd84d] shadow-[0_2px_8px_rgba(255,150,0,0.35)]">
                         <div className="h-full w-full rounded-full bg-gradient-to-r from-[#ff9600] via-[#ff7800] to-[#ff4b4b]" />
                       </div>
                     ) : (
-                      // Single day practiced circle
                       <div className="mx-auto h-9 w-9 rounded-full bg-gradient-to-br from-[#ff9600] to-[#ff4b4b] shadow-sm" />
                     )}
                   </div>
@@ -253,7 +276,6 @@ export const Calendar = ({
 
                 const status = dayStatuses[col] as DayStatus;
 
-                // Check if this cell is inside a multi-day span
                 const insideSpan = practicedSpans.find(
                   (s) => col >= s.start && col <= s.end,
                 );
@@ -266,7 +288,6 @@ export const Calendar = ({
                   insideSpan &&
                   (insideSpan.count >= 2 && !isSoftSpan);
 
-                // Sparkle on day 15 or 20 (as on IMG_6308.PNG)
                 const hasSparkle = date === 15 || date === 20;
 
                 return (
@@ -274,7 +295,6 @@ export const Calendar = ({
                     key={col}
                     className="relative flex h-10 w-full items-center justify-center"
                   >
-                    {/* Sparkle star decorator */}
                     {hasSparkle && isGradientSpan && (
                       <div className="pointer-events-none absolute -top-1 -right-1 z-20">
                         <SparkleSvg className="h-3.5 w-3.5 text-white animate-pulse" />
@@ -282,7 +302,7 @@ export const Calendar = ({
                     )}
 
                     {status === "freeze" ? (
-                      // FREEZE DROPLET BADGE (1:1 with IMG_6308)
+                      // FREEZE ICE BADGE (1:1 with IMG_6308)
                       <button
                         type="button"
                         disabled={!interactive}
@@ -290,7 +310,7 @@ export const Calendar = ({
                         className="relative z-10 transition-transform active:scale-95 focus:outline-none"
                         title="Streak Freeze (Click to cycle)"
                       >
-                        <FreezeDropletBadge dayNumber={date} size={38} />
+                        <FreezeIceBadge dayNumber={date} size={38} />
                       </button>
                     ) : status === "practiced" ? (
                       // PRACTICED STREAK DAY
@@ -329,21 +349,6 @@ export const Calendar = ({
           );
         })}
       </div>
-
-      {interactive && (
-        <div className="mt-3 flex items-center justify-center gap-3 border-t border-gray-100 pt-3 text-[11px] font-semibold text-gray-400">
-          <span className="flex items-center gap-1">
-            <span className="inline-block h-2.5 w-2.5 rounded-full bg-gradient-to-r from-[#ff9600] to-[#ff4b4b]" />
-            Streak
-          </span>
-          <span className="flex items-center gap-1">
-            <span className="inline-block h-2.5 w-2.5 rounded-full bg-[#20b7f8]" />
-            Freeze
-          </span>
-          <span className="text-gray-300">•</span>
-          <span>Click day to toggle</span>
-        </div>
-      )}
     </article>
   );
 };

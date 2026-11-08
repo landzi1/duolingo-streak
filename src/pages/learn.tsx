@@ -11,7 +11,6 @@ import {
   GoldenDumbbellSvg,
   GoldenTreasureSvg,
   GoldenTrophySvg,
-  GuidebookSvg,
   LessonCompletionSvg0,
   LessonCompletionSvg1,
   LessonCompletionSvg2,
@@ -23,12 +22,9 @@ import {
   ActiveTreasureSvg,
   ActiveTrophySvg,
   ActiveDumbbellSvg,
-  PracticeExerciseSvg,
 } from "~/components/Svgs";
 import { TopBar } from "~/components/TopBar";
 import { BottomBar } from "~/components/BottomBar";
-import { RightBar } from "~/components/RightBar";
-import { LeftBar } from "~/components/LeftBar";
 import { useRouter } from "next/router";
 import { LoginScreen, useLoginScreen } from "~/components/LoginScreen";
 import { useBoundStore } from "~/hooks/useBoundStore";
@@ -52,13 +48,15 @@ const tileStatus = (tile: Tile, lessonsCompleted: number): TileStatus => {
   return "ACTIVE";
 };
 
-// Tile Icon handler with Video and Headphones icons from IMG_6309.PNG
+// Tile Icon handler matching IMG_6309.PNG
 const TileIcon = ({
   tileType,
   status,
+  isFirstDumbbell = false,
 }: {
   tileType: TileType;
   status: TileStatus;
+  isFirstDumbbell?: boolean;
 }): JSX.Element => {
   switch (tileType) {
     case "star":
@@ -78,6 +76,28 @@ const TileIcon = ({
         <LockedBookSvg />
       );
     case "dumbbell":
+      // In IMG_6309.PNG, node 1 dumbbell has dark green icon angled at 45 deg on green puck
+      if (isFirstDumbbell) {
+        return (
+          <div className="relative flex h-9 w-9 items-center justify-center">
+            <svg
+              width="36"
+              height="36"
+              viewBox="0 0 36 36"
+              fill="none"
+              className="rotate-45"
+            >
+              <rect x="16" y="8" width="4" height="20" rx="1.5" fill="white" />
+              {/* Upper weights */}
+              <rect x="11" y="6" width="14" height="5" rx="2.5" fill="#3b8702" />
+              <rect x="13" y="3" width="10" height="3" rx="1.5" fill="#46a302" />
+              {/* Lower weights */}
+              <rect x="11" y="25" width="14" height="5" rx="2.5" fill="#3b8702" />
+              <rect x="13" y="30" width="10" height="3" rx="1.5" fill="#46a302" />
+            </svg>
+          </div>
+        );
+      }
       return status === "COMPLETE" ? (
         <GoldenDumbbellSvg />
       ) : status === "ACTIVE" ? (
@@ -96,10 +116,10 @@ const TileIcon = ({
     case "video":
       return (
         <svg
-          width="34"
-          height="34"
+          width="36"
+          height="36"
           viewBox="0 0 24 24"
-          fill={status === "LOCKED" ? "#afafaf" : "white"}
+          fill="white"
         >
           <path d="M15 8V5C15 3.9 14.1 3 13 3H3C1.9 3 1 3.9 1 5V19C1 20.1 1.9 21 3 21H13C14.1 21 15 20.1 15 19V16L21 21V3L15 8Z" />
         </svg>
@@ -107,23 +127,23 @@ const TileIcon = ({
     case "headphones":
       return (
         <svg
-          width="34"
-          height="34"
+          width="36"
+          height="36"
           viewBox="0 0 24 24"
           fill="none"
-          stroke={status === "LOCKED" ? "#afafaf" : "white"}
-          strokeWidth="2.5"
+          stroke="white"
+          strokeWidth="2.8"
           strokeLinecap="round"
           strokeLinejoin="round"
         >
           <path d="M3 18V12C3 7 7 3 12 3C17 3 21 7 21 12V18" />
           <path
             d="M1 18C1 16.5 2 15 3.5 15H5C5.5 15 6 15.5 6 16V20C6 20.5 5.5 21 5 21H3.5C2 21 1 19.5 1 18Z"
-            fill={status === "LOCKED" ? "#afafaf" : "white"}
+            fill="white"
           />
           <path
             d="M23 18C23 16.5 22 15 20.5 15H19C18.5 15 18 15.5 18 16V20C18 20.5 18.5 21 19 21H20.5C22 21 23 19.5 23 18Z"
-            fill={status === "LOCKED" ? "#afafaf" : "white"}
+            fill="white"
           />
         </svg>
       );
@@ -146,9 +166,7 @@ const TileIcon = ({
   }
 };
 
-// Curve offsets matching IMG_6309.PNG:
-// Node 0: right (55px), Node 1: right (30px), Node 2: center (0px),
-// Node 3: left (-35px), Node 4: left (-60px), Node 5: left (-35px), Node 6: center (0px)
+// Curve positions matching IMG_6309.PNG:
 const unit7Offsets = [
   "left-[55px]",
   "left-[30px]",
@@ -247,143 +265,181 @@ const getTileColors = ({
 
 // Duo the Owl holding purple potion beaker next to active node
 export const DuoWithPotionSvg = () => (
-  <svg width="84" height="84" viewBox="0 0 100 100" fill="none">
-    <ellipse cx="50" cy="90" rx="36" ry="7" fill="#e5e5e5" />
-    <ellipse cx="52" cy="52" rx="30" ry="34" fill="#58cc02" />
-    <path
-      d="M28 24C28 24 35 18 45 22C45 22 55 16 65 22C75 18 82 24 82 24C82 24 84 38 80 48C76 58 70 65 70 65H35C35 65 29 58 25 48C21 38 28 24 28 24Z"
-      fill="#58cc02"
-    />
-    <circle cx="42" cy="48" r="9" fill="white" />
-    <circle cx="44" cy="48" r="4.5" fill="#1b4965" />
-    <circle cx="62" cy="48" r="9" fill="white" />
-    <circle cx="60" cy="48" r="4.5" fill="#1b4965" />
-    <path
-      d="M36 38L47 41"
-      stroke="#46a302"
-      strokeWidth="3"
-      strokeLinecap="round"
-    />
-    <path
-      d="M68 38L57 41"
-      stroke="#46a302"
-      strokeWidth="3"
-      strokeLinecap="round"
-    />
-    <path d="M48 51L52 57L56 51H48Z" fill="#FF9600" />
-    <g transform="translate(14, 52)">
-      <rect
-        x="18"
-        y="2"
-        width="6"
-        height="8"
-        rx="1"
-        fill="#e0e7ff"
-        stroke="#a5b4fc"
-        strokeWidth="1.5"
-      />
-      <circle
-        cx="21"
-        cy="19"
-        r="13"
-        fill="#c084fc"
-        stroke="#a855f7"
-        strokeWidth="1.5"
-      />
-      <path
-        d="M12 17C14 15 18 16 21 16C24 16 28 15 30 17C29 26 25 30 21 30C17 30 13 26 12 17Z"
-        fill="#9333ea"
-      />
-      <circle cx="17" cy="18" r="1.5" fill="white" opacity="0.6" />
-      <circle cx="24" cy="22" r="2" fill="white" opacity="0.7" />
-    </g>
-    <ellipse cx="28" cy="62" rx="7" ry="5" fill="#46a302" />
-    <ellipse cx="72" cy="62" rx="7" ry="5" fill="#46a302" />
-  </svg>
-);
+  <div className="relative flex flex-col items-center select-none">
+    <svg width="115" height="115" viewBox="0 0 100 100" fill="none">
+      {/* Light circular shadow */}
+      <ellipse cx="50" cy="88" rx="36" ry="10" fill="#e8eaed" />
+      {/* Green body */}
+      <ellipse cx="50" cy="56" rx="32" ry="32" fill="#58cc02" />
+      {/* Face mask / lighter green */}
+      <ellipse cx="50" cy="56" rx="28" ry="24" fill="#69db04" opacity="0.6" />
+      {/* Sleepy / smug eyes looking right */}
+      <ellipse cx="38" cy="52" rx="7" ry="5.5" fill="white" />
+      <ellipse cx="40" cy="52" rx="3.5" ry="4" fill="#3c3c3c" />
+      <path d="M30 49H45" stroke="#46a302" strokeWidth="2.5" strokeLinecap="round" />
 
-// Witch Event Badge on left
-export const WitchEventBadge = () => (
-  <div className="flex flex-col items-center">
-    <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-[#6d4bb5] bg-[#4b3382] shadow-md">
-      <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-        <circle cx="20" cy="24" r="10" fill="#fed7aa" />
-        <circle cx="17" cy="24" r="1.5" fill="#3c3c3c" />
-        <circle cx="23" cy="24" r="1.5" fill="#3c3c3c" />
-        <path
-          d="M10 24C10 30 14 34 20 34C26 34 30 30 30 24"
-          stroke="#a855f7"
-          strokeWidth="3"
-          fill="none"
-        />
-        <path d="M20 4L28 18H12L20 4Z" fill="#311e5c" />
-        <ellipse cx="20" cy="18" rx="14" ry="4" fill="#311e5c" />
-        <path
-          d="M14 17C14 17 17 19 20 19C23 19 26 17 26 17"
-          stroke="#fbbf24"
-          strokeWidth="2"
-        />
-        <circle cx="20" cy="17" r="2" fill="white" />
+      <ellipse cx="60" cy="52" rx="7" ry="5.5" fill="white" />
+      <ellipse cx="62" cy="52" rx="3.5" ry="4" fill="#3c3c3c" />
+      <path d="M53 49H68" stroke="#46a302" strokeWidth="2.5" strokeLinecap="round" />
+
+      {/* Orange beak */}
+      <path d="M46 58C46 56 54 56 54 58L50 63L46 58Z" fill="#ff9600" />
+      {/* Orange feet */}
+      <ellipse cx="43" cy="85" rx="5" ry="2.5" fill="#ff9600" />
+      <ellipse cx="57" cy="85" rx="5" ry="2.5" fill="#ff9600" />
+
+      {/* Potion Flask in Right Wing */}
+      <g transform="translate(10, 32)">
+        {/* Flask neck & rim */}
+        <rect x="11" y="2" width="7" height="9" rx="1.5" fill="#e2e8f0" stroke="#cbd5e1" strokeWidth="1.2" />
+        <ellipse cx="14.5" cy="2" rx="5" ry="1.5" fill="#cbd5e1" />
+        {/* Flask bulb */}
+        <circle cx="14.5" cy="23" r="15" fill="#e2e8f0" />
+        <circle cx="14.5" cy="23" r="13.5" fill="#c084fc" />
+        {/* Purple potion level */}
+        <path d="M2 23C2 21 8 20 14.5 20C21 20 27 21 27 23C27 29.9 21.4 35.5 14.5 35.5C7.6 35.5 2 29.9 2 23Z" fill="#a855f7" />
+        {/* Highlight arc on bulb */}
+        <path d="M5 18C7 13 12 10 16 10" stroke="white" strokeWidth="3" strokeLinecap="round" opacity="0.8" />
+        {/* Wing holding neck */}
+        <ellipse cx="16" cy="11" rx="4.5" ry="3.5" fill="#58cc02" />
+      </g>
+    </svg>
+    {/* Three faint grey stars in an arc underneath Duo */}
+    <div className="mt-1 flex items-center justify-center gap-2 opacity-30">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="#9ca3af" className="-translate-y-1">
+        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+      </svg>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="#9ca3af" className="translate-y-1">
+        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+      </svg>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="#9ca3af" className="-translate-y-1">
+        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
       </svg>
     </div>
-    <div className="-mt-2 z-10 rounded-lg bg-[#2b1c4e] px-2 py-0.5 text-[10px] font-black uppercase text-white shadow">
+  </div>
+);
+
+// Duo Peeking with Blue Gaming Headphones above witch
+export const DuoHeadphonesPeeking = () => (
+  <div className="relative -mb-4 flex justify-center">
+    <svg width="76" height="48" viewBox="0 0 76 48" fill="none" className="overflow-visible">
+      <ellipse cx="38" cy="42" rx="30" ry="32" fill="#58cc02" />
+      <path d="M14 30C14 16 24 9 38 9C52 9 62 16 62 30" stroke="#3b82f6" strokeWidth="6" fill="none" strokeLinecap="round" />
+      <rect x="8" y="26" width="10" height="16" rx="5" fill="#60a5fa" stroke="#2563eb" strokeWidth="1.5" />
+      <rect x="58" y="26" width="10" height="16" rx="5" fill="#60a5fa" stroke="#2563eb" strokeWidth="1.5" />
+      <path d="M28 34C31 31 35 31 38 34" stroke="#46a302" strokeWidth="3" strokeLinecap="round" fill="none" />
+      <path d="M35 40L38 44L41 40H35Z" fill="#ff9600" />
+    </svg>
+  </div>
+);
+
+// Witch Event Badge matching IMG_6309.PNG 1:1
+export const WitchEventBadge = () => (
+  <div className="flex flex-col items-center">
+    <DuoHeadphonesPeeking />
+    <div className="relative flex h-16 w-16 items-center justify-center rounded-2xl bg-[#362569] shadow-md">
+      <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
+        <circle cx="22" cy="26" r="11" fill="#fed7aa" />
+        <circle cx="19" cy="26" r="1.5" fill="#3c3c3c" />
+        <circle cx="25" cy="26" r="1.5" fill="#3c3c3c" />
+        <path
+          d="M11 26C11 33 15 37 22 37C29 37 33 33 33 26"
+          stroke="#a855f7"
+          strokeWidth="3.5"
+          fill="none"
+        />
+        <path d="M22 4L32 20H12L22 4Z" fill="#241447" />
+        <ellipse cx="22" cy="20" rx="16" ry="4.5" fill="#241447" />
+        <circle cx="22" cy="19" r="2.5" fill="white" />
+      </svg>
+    </div>
+    <div className="-mt-2.5 z-10 rounded-lg bg-[#2d3574] px-2.5 py-0.5 text-[11px] font-black uppercase text-white shadow">
       16 days
     </div>
   </div>
 );
 
-// Claim Purple Chest Badge on left
+// Claim Purple Chest Badge matching IMG_6309.PNG 1:1
 export const ClaimChestBadge = () => (
-  <div className="flex flex-col items-center">
-    <div className="flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-[#a78bfa] bg-gradient-to-br from-[#8b5cf6] to-[#6d28d9] shadow-md">
-      <svg width="34" height="34" viewBox="0 0 34 34" fill="none">
-        <rect x="6" y="14" width="22" height="13" rx="2" fill="#5b21b6" />
-        <path d="M6 14C6 11 9 9 17 9C25 9 28 11 28 14H6Z" fill="#7c3aed" />
-        <rect x="9" y="9" width="3" height="18" fill="#fbbf24" />
-        <rect x="22" y="9" width="3" height="18" fill="#fbbf24" />
-        <circle cx="17" cy="16" r="3" fill="#fde047" />
-      </svg>
+  <div className="relative flex items-center">
+    <div className="flex flex-col items-center">
+      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#9b62f7] shadow-md">
+        <svg width="38" height="38" viewBox="0 0 34 34" fill="none">
+          <rect x="6" y="14" width="22" height="13" rx="2" fill="#ffc800" />
+          <path d="M6 14C6 11 9 9 17 9C25 9 28 11 28 14H6Z" fill="#ffc800" />
+          <rect x="9" y="9" width="3" height="18" fill="#e5a500" />
+          <rect x="22" y="9" width="3" height="18" fill="#e5a500" />
+          <circle cx="17" cy="16" r="3" fill="white" />
+        </svg>
+      </div>
+      <div className="-mt-2.5 z-10 rounded-lg bg-[#6e3be0] px-3 py-0.5 text-[11px] font-black uppercase text-white shadow">
+        Claim
+      </div>
     </div>
-    <div className="-mt-2 z-10 rounded-lg bg-[#6d28d9] px-2 py-0.5 text-[10px] font-black uppercase text-white shadow">
-      Claim
-    </div>
-  </div>
-);
-
-// Three grey stars underneath the wooden chest
-export const ThreeGreyStars = () => (
-  <div className="flex items-center justify-center gap-1.5 pt-1">
-    {[0, 1, 2].map((i) => (
-      <svg key={i} width="16" height="16" viewBox="0 0 24 24" fill="#d1d5db">
+    {/* Three faint grey stars floating to the right */}
+    <div className="absolute left-[70px] -top-1 flex items-center gap-1 opacity-35">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="#9ca3af" className="rotate-[-10deg]">
         <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
       </svg>
-    ))}
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="#9ca3af" className="translate-y-1">
+        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+      </svg>
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="#9ca3af" className="rotate-[10deg]">
+        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+      </svg>
+    </div>
   </div>
 );
 
-// Floating Blue Down Arrow Button
-export const FloatingScrollDownButton = () => (
-  <button
-    type="button"
-    onClick={() => {
-      window.scrollBy({ top: 400, behavior: "smooth" });
-    }}
-    className="fixed bottom-24 right-5 z-20 flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-[#e5e5e5] bg-white shadow-xl transition hover:bg-gray-50 active:scale-95"
-    aria-label="Scroll down"
-  >
-    <svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="#1cb0f6"
-      strokeWidth="3.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M12 4V20M19 13L12 20L5 13" />
+// Wooden chest matching IMG_6309.PNG 1:1
+export const Unit7WoodenChestSvg = () => (
+  <div className="relative flex items-center justify-center">
+    {/* Light grey rounded rectangle shadow underneath */}
+    <div className="absolute -bottom-1 h-14 w-20 rounded-2xl bg-black/5" />
+    <svg width="86" height="78" viewBox="0 0 90 84" fill="none">
+      {/* Wooden Chest Body */}
+      <rect x="15" y="24" width="60" height="48" rx="6" fill="#9b561c" />
+      {/* Front panel dark inset */}
+      <rect x="20" y="28" width="50" height="28" rx="3" fill="#6d390f" />
+      {/* Bottom wooden plank */}
+      <rect x="20" y="58" width="50" height="12" rx="2" fill="#c47728" />
+      {/* Beige / Light Wood Metal Reinforcements */}
+      <rect x="12" y="16" width="66" height="14" rx="4" fill="#fad6a5" />
+      <path d="M12 24H78V28H12V24Z" fill="#e6bd88" />
+      <rect x="13" y="16" width="7" height="60" rx="3" fill="#fad6a5" />
+      <rect x="70" y="16" width="7" height="60" rx="3" fill="#fad6a5" />
+      <rect x="13" y="68" width="64" height="8" rx="3" fill="#fad6a5" />
+      {/* Center White Lock latch disk */}
+      <circle cx="45" cy="24" r="8" fill="#ffffff" stroke="#fad6a5" strokeWidth="2.5" />
     </svg>
-  </button>
+  </div>
+);
+
+// Floating Rounded Rectangle Down Button matching IMG_6309.PNG 1:1
+export const FloatingScrollDownButton = () => (
+  <div className="fixed bottom-24 z-20 mx-auto flex w-full max-w-md pointer-events-none justify-end pr-5">
+    <button
+      type="button"
+      onClick={() => {
+        window.scrollBy({ top: 400, behavior: "smooth" });
+      }}
+      className="pointer-events-auto flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-b-4 border-[#e5e5e5] bg-white shadow-md transition hover:bg-gray-50 active:scale-95"
+      aria-label="Scroll down"
+    >
+      <svg
+        width="22"
+        height="22"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="#1cb0f6"
+        strokeWidth="4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M12 4V20M19 13L12 20L5 13" />
+      </svg>
+    </button>
+  </div>
 );
 
 const TileTooltip = ({
@@ -513,18 +569,18 @@ const UnitSection = ({ unit }: { unit: Unit }): JSX.Element => {
         borderColor={unit.borderColor}
       />
 
-      <div className="relative mb-8 mt-4 flex max-w-2xl flex-col items-center gap-4">
+      <div className="relative mb-8 mt-2 flex max-w-2xl flex-col items-center gap-5">
         {/* Floating Badges & Mascot for Unit 7 (matching IMG_6309.PNG) */}
         {unit.unitNumber === 7 && (
           <>
             {/* Left side event badges */}
-            <div className="absolute left-2 top-8 z-20 flex flex-col gap-4 sm:left-8">
+            <div className="absolute left-1 top-2 z-20 flex flex-col gap-6 sm:left-4">
               <WitchEventBadge />
               <ClaimChestBadge />
             </div>
 
             {/* Duo Mascot holding purple potion flask next to Node 4 (Star) */}
-            <div className="pointer-events-none absolute left-[55%] top-[290px] z-20">
+            <div className="pointer-events-none absolute right-3 top-[310px] z-20">
               <DuoWithPotionSvg />
             </div>
           </>
@@ -578,11 +634,11 @@ const UnitSection = ({ unit }: { unit: Unit }): JSX.Element => {
                         />
                         <button
                           className={[
-                            "absolute m-3 rounded-full border-b-8 p-4 transition-transform active:translate-y-1",
+                            "absolute m-3 rounded-full border-b-[8px] p-4 transition-transform active:translate-y-1 shadow-sm",
                             getTileColors({
                               tileType: tile.type,
                               status,
-                              defaultColors: `${unit.borderColor} ${unit.backgroundColor}`,
+                              defaultColors: "border-[#46a302] bg-[#58cc02]",
                             }),
                           ].join(" ")}
                           onClick={() => {
@@ -598,7 +654,11 @@ const UnitSection = ({ unit }: { unit: Unit }): JSX.Element => {
                             setSelectedTile(i);
                           }}
                         >
-                          <TileIcon tileType={tile.type} status={status} />
+                          <TileIcon
+                            tileType={tile.type}
+                            status={status}
+                            isFirstDumbbell={unit.unitNumber === 7 && i === 0}
+                          />
                           <span className="sr-only">Show lesson</span>
                         </button>
                       </div>
@@ -628,9 +688,11 @@ const UnitSection = ({ unit }: { unit: Unit }): JSX.Element => {
                         {status === "ACTIVE" && (
                           <HoverLabel text="Open" textColor="text-yellow-400" />
                         )}
-                        <TileIcon tileType={tile.type} status={status} />
-                        {/* 3 grey stars underneath chest as in IMG_6309 */}
-                        <ThreeGreyStars />
+                        {unit.unitNumber === 7 ? (
+                          <Unit7WoodenChestSvg />
+                        ) : (
+                          <TileIcon tileType={tile.type} status={status} />
+                        )}
                       </div>
                     );
                 }
@@ -667,90 +729,28 @@ const UnitSection = ({ unit }: { unit: Unit }): JSX.Element => {
   );
 };
 
-const getTopBarColors = (
-  _scrollY: number,
-): {
-  backgroundColor: `bg-${string}`;
-  borderColor: `border-${string}`;
-} => {
-  const defaultColors = {
-    backgroundColor: "bg-white",
-    borderColor: "border-[#e5e5e5]",
-  } as const;
-
-  return defaultColors;
-};
-
 const Learn: NextPage = () => {
   const { loginScreenState, setLoginScreenState } = useLoginScreen();
 
-  const [scrollY, setScrollY] = useState(0);
-  useEffect(() => {
-    const updateScrollY = () => setScrollY(globalThis.scrollY ?? scrollY);
-    updateScrollY();
-    document.addEventListener("scroll", updateScrollY);
-    return () => document.removeEventListener("scroll", updateScrollY);
-  }, [scrollY]);
-
-  const topBarColors = getTopBarColors(scrollY);
-
   return (
-    <>
-      <TopBar
-        backgroundColor={topBarColors.backgroundColor}
-        borderColor={topBarColors.borderColor}
-      />
-      <LeftBar selectedTab="Learn" />
+    <div className="relative mx-auto flex min-h-screen w-full max-w-md flex-col bg-white text-[#3c3c3c] antialiased shadow-2xl">
+      <TopBar />
 
-      <div className="flex justify-center gap-3 pt-14 sm:p-6 sm:pt-10 md:ml-24 lg:ml-64 lg:gap-12">
-        <div className="flex max-w-2xl grow flex-col">
-          {units.map((unit) => (
-            <UnitSection unit={unit} key={unit.unitNumber} />
-          ))}
-          <div className="sticky bottom-28 left-0 right-0 flex items-end justify-between">
-            <Link
-              href="/lesson?practice"
-              className="absolute left-4 flex h-16 w-16 items-center justify-center rounded-full border-2 border-b-4 border-gray-200 bg-white transition hover:bg-gray-50 hover:brightness-90 md:left-0"
-            >
-              <span className="sr-only">Practice exercise</span>
-              <PracticeExerciseSvg className="h-8 w-8" />
-            </Link>
-            {scrollY > 100 && (
-              <button
-                className="absolute right-4 flex h-14 w-14 items-center justify-center self-end rounded-2xl border-2 border-b-4 border-gray-200 bg-white transition hover:bg-gray-50 hover:brightness-90 md:right-0"
-                onClick={() => scrollTo(0, 0)}
-              >
-                <span className="sr-only">Jump to top</span>
-                <svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="#1cb0f6"
-                  strokeWidth="3.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M12 20V4M5 11L12 4L19 11" />
-                </svg>
-              </button>
-            )}
-          </div>
-        </div>
-        <RightBar />
-      </div>
+      <main className="flex-1 px-4 pt-16 pb-24">
+        {units.map((unit) => (
+          <UnitSection unit={unit} key={unit.unitNumber} />
+        ))}
+      </main>
 
-      {/* Floating Scroll Down button matching IMG_6309.PNG */}
+      {/* Floating Scroll Down button matching IMG_6309.PNG 1:1 */}
       <FloatingScrollDownButton />
-
-      <div className="pt-[90px]"></div>
 
       <BottomBar selectedTab="Learn" />
       <LoginScreen
         loginScreenState={loginScreenState}
         setLoginScreenState={setLoginScreenState}
       />
-    </>
+    </div>
   );
 };
 
@@ -814,11 +814,11 @@ const HoverLabel = ({
   );
 };
 
-// Unit Header Banner matching IMG_6309.PNG
+// Unit Header Banner matching IMG_6309.PNG 1:1
 const UnitHeader = ({
   unitNumber,
   description: _description,
-  backgroundColor,
+  backgroundColor: _backgroundColor,
   borderColor: _borderColor,
 }: {
   unitNumber: number;
@@ -832,25 +832,29 @@ const UnitHeader = ({
   const title = unit?.title ?? `Unit ${unitNumber}`;
 
   return (
-    <article
-      className={[
-        "max-w-2xl text-white rounded-2xl shadow-sm mb-4",
-        backgroundColor,
-      ].join(" ")}
-    >
-      <header className="flex items-center justify-between gap-4 p-4">
+    <article className="mb-4 max-w-2xl rounded-[26px] border-b-[6px] border-[#46a302] bg-[#58cc02] text-white shadow-sm">
+      <header className="flex items-center justify-between p-4 px-5">
         <div className="flex flex-col gap-0.5">
-          <span className="text-xs font-black uppercase tracking-wider text-[#bbf276]">
+          <span className="text-xs font-black uppercase tracking-wider text-[#a6f250]">
             {subtitle}
           </span>
-          <h2 className="text-xl font-black text-white">{title}</h2>
+          <h2 className="text-2xl font-black text-white">{title}</h2>
         </div>
         <Link
           href={`https://duolingo.com/guidebook/${language.code}/${unitNumber}`}
-          className="flex h-12 w-12 items-center justify-center rounded-2xl border-2 border-b-4 border-[#46a302] bg-[#58cc02] text-white transition hover:brightness-105 active:border-b-2 shadow-sm"
+          className="flex items-center justify-center border-l-2 border-[#46a302] pl-4 transition hover:opacity-90 active:scale-95"
           aria-label="Guidebook"
         >
-          <GuidebookSvg />
+          {/* Guidebook notebook icon with 3 spiral rings on left and 3 lines */}
+          <svg width="32" height="32" viewBox="0 0 28 28" fill="none">
+            <rect x="7" y="3" width="18" height="22" rx="4" fill="white" />
+            <rect x="3" y="6" width="6" height="3" rx="1.5" fill="#46a302" />
+            <rect x="3" y="12" width="6" height="3" rx="1.5" fill="#46a302" />
+            <rect x="3" y="18" width="6" height="3" rx="1.5" fill="#46a302" />
+            <rect x="11" y="8" width="10" height="2.5" rx="1.25" fill="#58cc02" />
+            <rect x="11" y="13" width="10" height="2.5" rx="1.25" fill="#58cc02" />
+            <rect x="11" y="18" width="7" height="2.5" rx="1.25" fill="#58cc02" />
+          </svg>
         </Link>
       </header>
     </article>
