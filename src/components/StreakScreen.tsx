@@ -64,6 +64,40 @@ export const HeroFlameIcon = ({ active }: { active: boolean }) => (
   </svg>
 );
 
+// 1:1 replica of Duolingo Streak Society padlock icon from IMG_6310.PNG
+export const StreakSocietyLockSvg = ({
+  className = "w-full h-auto",
+}: {
+  className?: string;
+}) => (
+  <svg
+    viewBox="0 0 163 195"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+  >
+    {/* Shackle */}
+    <path
+      d="M27 92V55C27 24.9 51.4 0.5 81.5 0.5C111.6 0.5 136 24.9 136 55V92H107V55C107 40.9 95.6 29.5 81.5 29.5C67.4 29.5 56 40.9 56 55V92H27Z"
+      fill="#afafaf"
+    />
+    {/* Body */}
+    <rect x="1" y="68" width="161" height="126" rx="24" fill="#c4c4c4" />
+    {/* 4 Rivets */}
+    <circle cx="25" cy="92" r="10.5" fill="#afafaf" />
+    <circle cx="138" cy="92" r="10.5" fill="#afafaf" />
+    <circle cx="25" cy="170" r="10.5" fill="#afafaf" />
+    <circle cx="138" cy="170" r="10.5" fill="#afafaf" />
+    {/* Keyhole */}
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M81.5 101C71.8 101 64 108.8 64 118.5C64 124.2 66.8 129.2 71 132.5L66.5 152.5C65.5 156.8 68.8 160.5 73.2 160.5H89.8C94.2 160.5 97.5 156.8 96.5 152.5L92 132.5C96.2 129.2 99 124.2 99 118.5C99 108.8 91.2 101 81.5 101Z"
+      fill="#868686"
+    />
+  </svg>
+);
+
 export const StreakScreen = ({
   onClose,
   initialMonth,
@@ -274,31 +308,18 @@ export const StreakScreen = ({
             {/* The Calendar Card */}
             <Calendar now={now} />
 
-            {/* Streak Society Section */}
-            <div className="mt-6 flex flex-col">
-              <h3 className="mb-3 text-xl font-extrabold text-[#3c3c3c]">
+            {/* Streak Society Section (1:1 copy of IMG_6310.PNG) */}
+            <div className="mt-8 flex flex-col">
+              <h3 className="mb-3.5 text-2xl font-black text-[#4b4b4b]">
                 Streak Society
               </h3>
-              <div className="flex items-center gap-4 rounded-3xl border-2 border-[#e5e5e5] bg-white p-4 shadow-sm">
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-[#ff9600] to-[#ff4b4b] text-white shadow-md">
-                  <svg
-                    width="32"
-                    height="32"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                  >
-                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
-                  </svg>
+              <div className="flex items-center gap-5 rounded-[28px] border-2 border-[#e5e5e5] bg-white p-5 sm:gap-6 sm:p-6 shadow-sm">
+                <div className="w-[62px] shrink-0 sm:w-[68px]">
+                  <StreakSocietyLockSvg />
                 </div>
-                <div className="flex flex-1 flex-col">
-                  <span className="text-base font-extrabold text-[#3c3c3c]">
-                    Join at 7 days!
-                  </span>
-                  <span className="text-xs font-semibold text-[#777777]">
-                    Keep your streak alive to unlock exclusive VIP rewards, app
-                    icons and extra freezes.
-                  </span>
-                </div>
+                <p className="text-[17px] font-bold leading-snug text-[#777777]">
+                  Reach a 7 day streak to join the Streak Society and earn exclusive rewards.
+                </p>
               </div>
             </div>
           </div>
