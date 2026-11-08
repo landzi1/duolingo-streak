@@ -1,9 +1,15 @@
 import { type AppType } from "next/dist/shared/lib/utils";
 import Head from "next/head";
+import { useEffect } from "react";
+import { useBoundStore } from "~/hooks/useBoundStore";
 
 import "~/styles/globals.css";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
+  useEffect(() => {
+    useBoundStore.getState().initFromStorage?.();
+  }, []);
+
   return (
     <>
       <Head>
