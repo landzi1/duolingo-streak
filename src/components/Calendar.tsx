@@ -201,50 +201,76 @@ export const Calendar = ({
       {/* Weeks Grid */}
       <div className="flex flex-col gap-2.5 py-1">
         {calendarDays.map((week, weekIdx) => {
-          // Identify contiguous spans of 'practiced' days in this week
+          // Identify statuses of days in this week
           const dayStatuses = week.map((date) =>
             date !== null ? getDayStatus(now.date(date)) : "none",
           );
 
-          // Find consecutive practiced segments
-          const practicedSpans: { start: number; end: number; count: number }[] = [];
+          // Find consecutive active streak segments (both 'practiced' and 'freeze')
+          // As seen in IMG_6308.PNG, freezes connect seamlessly into the streak pill!
+          const streakSpans: {
+            start: number;
+            end: number;
+            count: number;
+            hasFreeze: boolean;
+            hasPracticed: boolean;
+          }[] = [];
+
           let currentStart: number | null = null;
+          let currentHasFreeze = false;
+          let currentHasPracticed = false;
 
           for (let col = 0; col < 7; col++) {
-            if (dayStatuses[col] === "practiced") {
-              if (currentStart === null) currentStart = col;
+            const st = dayStatuses[col];
+            if (st === "practiced" || st === "freeze") {
+              if (currentStart === null) {
+                currentStart = col;
+                currentHasFreeze = st === "freeze";
+                currentHasPracticed = st === "practiced";
+              } else {
+                if (st === "freeze") currentHasFreeze = true;
+                if (st === "practiced") currentHasPracticed = true;
+              }
             } else {
               if (currentStart !== null) {
-                practicedSpans.push({
+                streakSpans.push({
                   start: currentStart,
                   end: col - 1,
                   count: col - currentStart,
+                  hasFreeze: currentHasFreeze,
+                  hasPracticed: currentHasPracticed,
                 });
                 currentStart = null;
+                currentHasFreeze = false;
+                currentHasPracticed = false;
               }
             }
           }
           if (currentStart !== null) {
-            practicedSpans.push({
+            streakSpans.push({
               start: currentStart,
               end: 6,
               count: 7 - currentStart,
+              hasFreeze: currentHasFreeze,
+              hasPracticed: currentHasPracticed,
             });
           }
 
           return (
             <div key={weekIdx} className="relative grid grid-cols-7 h-10 items-center">
               {/* Connected streak pill backgrounds */}
-              {practicedSpans.map((span, sIdx) => {
+              {streakSpans.map((span, sIdx) => {
                 const isFullWeek = span.count === 7;
                 const isMultiDay = span.count > 1;
 
                 const leftPercent = (span.start / 7) * 100;
                 const widthPercent = ((span.end - span.start + 1) / 7) * 100;
 
-                // Style matching IMG_6308.PNG
+                // When a streak span contains a freeze (or is broken/past streak like Jan rows 2 & 5),
+                // it renders with that soft warm yellowish background (#fff4cc) stretching across all days in the span!
                 const isSoftPill =
-                  !isFullWeek && span.start > 0 && span.end === 6;
+                  span.hasFreeze ||
+                  (!isFullWeek && span.start > 0 && span.end === 6);
 
                 return (
                   <div
@@ -256,7 +282,7 @@ export const Calendar = ({
                     }}
                   >
                     {isSoftPill ? (
-                      <div className="h-full w-full rounded-full bg-[#fff0b3]" />
+                      <div className="h-full w-full rounded-full bg-[#fff4cc]" />
                     ) : isMultiDay ? (
                       <div className="relative h-full w-full rounded-full p-[2px] bg-[#ffd84d] shadow-[0_2px_8px_rgba(255,150,0,0.35)]">
                         <div className="h-full w-full rounded-full bg-gradient-to-r from-[#ff9600] via-[#ff7800] to-[#ff4b4b]" />
@@ -276,17 +302,19 @@ export const Calendar = ({
 
                 const status = dayStatuses[col] as DayStatus;
 
-                const insideSpan = practicedSpans.find(
+                const insideSpan = streakSpans.find(
                   (s) => col >= s.start && col <= s.end,
                 );
                 const isSoftSpan =
                   insideSpan &&
-                  insideSpan.count > 1 &&
-                  insideSpan.count < 7 &&
-                  insideSpan.end === 6;
+                  (insideSpan.hasFreeze ||
+                    (!insideSpan.hasFreeze &&
+                      insideSpan.count < 7 &&
+                      insideSpan.end === 6));
                 const isGradientSpan =
                   insideSpan &&
-                  (insideSpan.count >= 2 && !isSoftSpan);
+                  !insideSpan.hasFreeze &&
+                  insideSpan.count >= 2;
 
                 const hasSparkle = date === 15 || date === 20;
 
@@ -302,7 +330,7 @@ export const Calendar = ({
                     )}
 
                     {status === "freeze" ? (
-                      // FREEZE ICE BADGE (1:1 with IMG_6308)
+                      // FREEZE ICE BADGE (1:1 with IMG_6308 - sitting right on top of streak pill)
                       <button
                         type="button"
                         disabled={!interactive}
