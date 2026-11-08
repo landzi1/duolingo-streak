@@ -260,11 +260,24 @@ export const Calendar = ({
             <div key={weekIdx} className="relative grid grid-cols-7 h-10 items-center">
               {/* Connected streak pill backgrounds */}
               {streakSpans.map((span, sIdx) => {
+                // If a single day is a freeze by itself, no connecting pill needed
+                if (span.count === 1 && dayStatuses[span.start] === "freeze") {
+                  return null;
+                }
+
                 const isFullWeek = span.count === 7;
                 const isMultiDay = span.count > 1;
 
-                const leftPercent = (span.start / 7) * 100;
-                const widthPercent = ((span.end - span.start + 1) / 7) * 100;
+                const startIsFreeze = dayStatuses[span.start] === "freeze";
+                const endIsFreeze = dayStatuses[span.end] === "freeze";
+
+                // When a freeze is at the start, tuck pill under the freeze badge center
+                const startFraction = startIsFreeze ? span.start + 0.5 : span.start;
+                // When a freeze is at the end, tuck pill under the freeze badge center
+                const endFraction = endIsFreeze ? span.end + 0.5 : span.end + 1;
+
+                const leftPercent = (startFraction / 7) * 100;
+                const widthPercent = ((endFraction - startFraction) / 7) * 100;
 
                 // When a streak span contains a freeze (or is broken/past streak like Jan rows 2 & 5),
                 // it renders with that soft warm yellowish background (#fff4cc) stretching across all days in the span!
@@ -275,14 +288,25 @@ export const Calendar = ({
                 return (
                   <div
                     key={sIdx}
-                    className="pointer-events-none absolute h-10 transition-all"
+                    className="pointer-events-none absolute h-[34px] transition-all"
                     style={{
-                      left: `calc(${leftPercent}% + 2px)`,
-                      width: `calc(${widthPercent}% - 4px)`,
+                      left: `calc(${leftPercent}% + ${startIsFreeze ? "0px" : "2px"})`,
+                      width: `calc(${widthPercent}% - ${startIsFreeze || endIsFreeze ? "2px" : "4px"})`,
                     }}
                   >
                     {isSoftPill ? (
-                      <div className="h-full w-full rounded-full bg-[#fff4cc]" />
+                      <div
+                        className={[
+                          "h-full w-full bg-[#fff4cc]",
+                          startIsFreeze && endIsFreeze
+                            ? "rounded-none"
+                            : startIsFreeze
+                              ? "rounded-r-full"
+                              : endIsFreeze
+                                ? "rounded-l-full"
+                                : "rounded-full",
+                        ].join(" ")}
+                      />
                     ) : isMultiDay ? (
                       <div className="relative h-full w-full rounded-full p-[2px] bg-[#ffd84d] shadow-[0_2px_8px_rgba(255,150,0,0.35)]">
                         <div className="h-full w-full rounded-full bg-gradient-to-r from-[#ff9600] via-[#ff7800] to-[#ff4b4b]" />
@@ -338,7 +362,7 @@ export const Calendar = ({
                         className="relative z-10 transition-transform active:scale-95 focus:outline-none"
                         title="Streak Freeze (Click to cycle)"
                       >
-                        <FreezeIceBadge dayNumber={date} size={38} />
+                        <FreezeIceBadge dayNumber={date} size={42} />
                       </button>
                     ) : status === "practiced" ? (
                       // PRACTICED STREAK DAY
